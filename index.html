@@ -53,7 +53,7 @@
 		</tr>
 		<tr ng-repeat="x in products">
 			<td data-column="name" 			contenteditable ng-blur="updateProduct($event, this)">{{ x.product_name }}</td>
-			<td><input type="number" 		ng-focus="calculate(this)"></td>
+			<td><input type="number" 		ng-blur="calculate(this, $event)"></td>
 			<td data-column="calories" 		contenteditable ng-blur="updateProduct($event, this)">{{ x.calories }}</td>
 			<td data-column="proteins" 		contenteditable ng-blur="updateProduct($event, this)">{{ x.proteins }}</td>
 			<td data-column="fats" 			contenteditable ng-blur="updateProduct($event, this)">{{ x.fats }}</td>
@@ -83,11 +83,11 @@
 
 		<tr>
 			<td>Summary</td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>{{ summaryObj.totalWeight }}</td>
+			<td>{{ summaryObj.totalCalories | number: 1 }}</td>
+			<td>{{ summaryObj.totalProteins | number: 1 }}</td>
+			<td>{{ summaryObj.totalFats | number: 1 }}</td>
+			<td>{{ summaryObj.totalCarbohydrates | number: 1 }}</td>
 		</tr>
 	</table>
 </div>
@@ -106,6 +106,8 @@ app.controller('myCtrl', function($scope, $http) {
 	$scope.carbohydrates;
 
 	$scope.list = [];
+
+	$scope.summaryObj = {};
 
 	$scope.loadProducts = function() {
 		$http({
@@ -163,15 +165,26 @@ app.controller('myCtrl', function($scope, $http) {
 		});
 	}
 
-	$scope.calculate = function(obj) {
+	$scope.calculate = function(obj, event) {
 
 		var prod = obj.x;
 
+		// calculate products that have weight
+		if (event.target.value) {
+			prod.weight = event.target.value;	
+		} else {
+			return;
+		}
+		
+
 		// first time add product to array
-		if ($scope.list.length === 0) { $scope.list.push(prod); }
+		if ($scope.list.length === 0) {
+			$scope.list.push( $scope.calculateProduct(prod) );
+		}
 
 		var add = false;
 
+		// to add on not to add))))
 		for (obj of $scope.list) {
 			if (prod.product_name !== obj.product_name) {
 				add = true;
@@ -180,7 +193,47 @@ app.controller('myCtrl', function($scope, $http) {
 			}
 		}
 
-		if (add) { $scope.list.push(prod); }
+		if (add) {
+			$scope.list.push( $scope.calculateProduct(prod) );
+		}
+
+		$scope.calculateSummary($scope.list);
+	}
+
+	$scope.calculateProduct = function(prod) {
+
+		var obj = {}
+
+		obj.product_name 	= prod.product_name;
+		obj.weight 			= prod.weight;
+		obj.calories 		= prod.calories * prod.weight / 100;
+		obj.proteins 		= prod.proteins * prod.weight / 100;
+		obj.fats 			= prod.fats * prod.weight / 100;
+		obj.carbohydrates 	= prod.carbohydrates * prod.weight / 100;
+		
+
+		return obj;
+	}
+
+	$scope.calculateSummary = function(list) {
+
+		var obj = {
+			"totalWeight"		: 0, 
+			"totalCalories"		: 0,
+			"totalProteins"		: 0,
+			"totalFats"			: 0,
+			"totalCarbohydrates": 0
+		};
+
+		for(var prod of list) {
+			obj.totalWeight 		+= parseFloat(prod.weight);
+			obj.totalCalories 		+= parseFloat(prod.calories);
+			obj.totalProteins 		+= parseFloat(prod.proteins);
+			obj.totalFats 			+= parseFloat(prod.fats);
+			obj.totalCarbohydrates 	+= parseFloat(prod.carbohydrates);
+		}
+
+		$scope.summaryObj = obj;
 	}
 });
 </script>
