@@ -52,15 +52,15 @@
 	<span class="table-header header-top-offset" ng-show="trig()">Calculated values</span>
 	<table id="summary" ng-show="trig()">
 		<tr>
-			<th>Product name</th>
-			<th>Weight</th>
-			<th>Calories</th>
-			<th>Proteins</th>
-			<th>Fats</th>
-			<th>Carbohydrates</th>
+			<th ng-click="chooseOrder('name')">Product name</th>
+			<th ng-click="chooseOrder('weight')">Weight</th>
+			<th ng-click="chooseOrder('calories')">Calories</th>
+			<th ng-click="chooseOrder('proteins')">Proteins</th>
+			<th ng-click="chooseOrder('fats')">Fats</th>
+			<th ng-click="chooseOrder('carbohydrates')">Carbohydrates</th>
 		</tr>
 
-		<tr ng-repeat="x in list">
+		<tr ng-repeat="x in list | orderBy:order:reverse">
 			<td>{{ x.name }}</td>
 			<td style="text-align:center">{{ x.weight }}</td>
 			<td style="text-align:center">{{ x.calories | number: 1 }}</td>
@@ -96,6 +96,8 @@ app.controller('myCtrl', function($scope, $http) {
 	$scope.list = [];	// summary table list
 
 	$scope.summaryObj = {};
+	$scope.order = "";
+	$scope.reverse = false;
 
 	$scope.loadProducts = function() {
 		$http({
@@ -232,6 +234,10 @@ app.controller('myCtrl', function($scope, $http) {
 	// define to show or hide summary table
 	$scope.trig = function() {
 		return Boolean($scope.list.length);
+	}
+
+	$scope.chooseOrder = function(order) {
+		$scope.order = order;
 	}
 });
 </script>
