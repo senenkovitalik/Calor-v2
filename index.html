@@ -9,7 +9,7 @@
 
 <div ng-app="myApp" ng-controller="myCtrl" ng-init="loadProducts()">
 
-	<span class="table-header">You can add new products here</span>
+	<span class="table-header header-top-offset">You can add new products here</span>
 	<table id="new-product">
 		<tr>
 			<th>Product name</th>
@@ -20,24 +20,12 @@
 			<th></th>
 		</tr>
 		<tr>
-			<td>
-				<input type="text" ng-model="name">
-			</td>
-			<td>
-				<input type="number" ng-model="calories">
-			</td>
-			<td>
-				<input type="number" ng-model="proteins">
-			</td>
-			<td>
-				<input type="number" ng-model="fats">
-			</td>
-			<td>
-				<input type="number" ng-model="carbohydrates">
-			</td>
-			<td>
-				<input type="button" value="Save" ng-click="saveProduct()" />
-			</td>
+			<td style="text-align:center"><input type="text" ng-model="name"></td>
+			<td style="text-align:center"><input type="number" ng-model="calories"></td>
+			<td style="text-align:center"><input type="number" ng-model="proteins"></td>
+			<td style="text-align:center"><input type="number" ng-model="fats"></td>
+			<td style="text-align:center"><input type="number" ng-model="carbohydrates"></td>
+			<td style="text-align:center"><input type="button" value="Save" ng-click="saveProduct()" /></td>
 		</tr>
 	</table>
 
@@ -52,16 +40,16 @@
 			<th>Carbohydrates</th>
 		</tr>
 		<tr ng-repeat="x in products">
-			<td data-column="name" 			contenteditable ng-blur="updateProduct($event, this)">{{ x.name }}</td>
-			<td><input type="number" 		ng-blur="calculate(this, $event)"></td>
-			<td data-column="calories" 		contenteditable ng-blur="updateProduct($event, this)">{{ x.calories }}</td>
-			<td data-column="proteins" 		contenteditable ng-blur="updateProduct($event, this)">{{ x.proteins }}</td>
-			<td data-column="fats" 			contenteditable ng-blur="updateProduct($event, this)">{{ x.fats }}</td>
-			<td data-column="carbohydrates" contenteditable ng-blur="updateProduct($event, this)">{{ x.carbohydrates }}</td>
+			<td data-column="name" 										contenteditable ng-blur="updateProduct($event, this)">{{ x.name }}</td>
+			<td style="text-align:center"><input type="number" ng-blur="calculate(this, $event)"></td>
+			<td style="text-align:center" data-column="calories" 		contenteditable ng-blur="updateProduct($event, this)">{{ x.calories }}</td>
+			<td style="text-align:center" data-column="proteins" 		contenteditable ng-blur="updateProduct($event, this)">{{ x.proteins }}</td>
+			<td style="text-align:center" data-column="fats" 			contenteditable ng-blur="updateProduct($event, this)">{{ x.fats }}</td>
+			<td style="text-align:center" data-column="carbohydrates" 	contenteditable ng-blur="updateProduct($event, this)">{{ x.carbohydrates }}</td>
 		</tr>
 	</table>
 
-	<span class="table-header header-top-offset">Calculated values</span>
+	<span class="table-header header-top-offset" ng-show="trig()">Calculated values</span>
 	<table id="summary" ng-show="trig()">
 		<tr>
 			<th>Product name</th>
@@ -74,20 +62,20 @@
 
 		<tr ng-repeat="x in list">
 			<td>{{ x.name }}</td>
-			<td>{{ x.weight }}</td>
-			<td>{{ x.calories | number: 1 }}</td>
-			<td>{{ x.proteins | number: 1 }}</td>
-			<td>{{ x.fats | number: 1 }}</td>
-			<td>{{ x.carbohydrates | number: 1 }}</td>
+			<td style="text-align:center">{{ x.weight }}</td>
+			<td style="text-align:center">{{ x.calories | number: 1 }}</td>
+			<td style="text-align:center">{{ x.proteins | number: 1 }}</td>
+			<td style="text-align:center">{{ x.fats | number: 1 }}</td>
+			<td style="text-align:center">{{ x.carbohydrates | number: 1 }}</td>
 		</tr>
 
 		<tr>
 			<td>Summary</td>
-			<td>{{ summaryObj.totalWeight }}</td>
-			<td>{{ summaryObj.totalCalories | number: 1 }}</td>
-			<td>{{ summaryObj.totalProteins | number: 1 }}</td>
-			<td>{{ summaryObj.totalFats | number: 1 }}</td>
-			<td>{{ summaryObj.totalCarbohydrates | number: 1 }}</td>
+			<td style="text-align:center">{{ summaryObj.totalWeight }}</td>
+			<td style="text-align:center">{{ summaryObj.totalCalories | number: 1 }}</td>
+			<td style="text-align:center">{{ summaryObj.totalProteins | number: 1 }}</td>
+			<td style="text-align:center">{{ summaryObj.totalFats | number: 1 }}</td>
+			<td style="text-align:center">{{ summaryObj.totalCarbohydrates | number: 1 }}</td>
 		</tr>
 	</table>
 </div>
