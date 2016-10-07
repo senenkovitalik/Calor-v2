@@ -20,7 +20,7 @@
 			<th></th>
 		</tr>
 		<tr>
-			<td style="text-align:center"><input type="text" ng-model="name"></td>
+			<td style="text-align:center"><input type="text"   ng-model="name"></td>
 			<td style="text-align:center"><input type="number" ng-model="calories"></td>
 			<td style="text-align:center"><input type="number" ng-model="proteins"></td>
 			<td style="text-align:center"><input type="number" ng-model="fats"></td>
@@ -110,7 +110,7 @@ app.controller('myCtrl', function($scope, $http) {
 
 	$scope.saveProduct = function() {
 		var product = {
-			"name"	: $scope.name,
+			"name"			: $scope.name,
 			"calories"		: $scope.calories,
 			"proteins"		: $scope.proteins,
 			"fats"			: $scope.fats,
@@ -123,9 +123,9 @@ app.controller('myCtrl', function($scope, $http) {
 			method: 'GET',
 			url: 	'saveproduct.php?q=' + jsonProduct
 		}).then(function mySucces(response) {
-			console.log(response.data);
+			response.data ?	$scope.products.push(product) : null
 		}, function myError(response) {
-			console.log(response.statusText);
+			console.log(response.data);
 		});
 	}
 
