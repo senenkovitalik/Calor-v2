@@ -9,7 +9,7 @@ $result = $conn->query("SELECT * FROM products");
 $outp = "";
 while($rs = $result->fetch_array(MYSQLI_ASSOC)) {
 	if ($outp != "") {$outp .= ",";}
-	$outp .= '{"product_name":"'	. $rs["name"] 			. '",';
+	$outp .= '{"name":"'	. $rs["name"] 			. '",';
 	$outp .= '"calories":"' 		. $rs["calories"]		. '",';
 	$outp .= '"proteins":"' 		. $rs["proteins"]		. '",';
 	$outp .= '"fats":"'			 	. $rs["fats"]			. '",';

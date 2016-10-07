@@ -21,7 +21,7 @@
 		</tr>
 		<tr>
 			<td>
-				<input type="text" ng-model="product_name">
+				<input type="text" ng-model="name">
 			</td>
 			<td>
 				<input type="number" ng-model="calories">
@@ -52,7 +52,7 @@
 			<th>Carbohydrates</th>
 		</tr>
 		<tr ng-repeat="x in products">
-			<td data-column="name" 			contenteditable ng-blur="updateProduct($event, this)">{{ x.product_name }}</td>
+			<td data-column="name" 			contenteditable ng-blur="updateProduct($event, this)">{{ x.name }}</td>
 			<td><input type="number" 		ng-blur="calculate(this, $event)"></td>
 			<td data-column="calories" 		contenteditable ng-blur="updateProduct($event, this)">{{ x.calories }}</td>
 			<td data-column="proteins" 		contenteditable ng-blur="updateProduct($event, this)">{{ x.proteins }}</td>
@@ -62,7 +62,7 @@
 	</table>
 
 	<span class="table-header header-top-offset">Calculated values</span>
-	<table id="summary">
+	<table id="summary" ng-show="trig()">
 		<tr>
 			<th>Product name</th>
 			<th>Weight</th>
@@ -73,12 +73,12 @@
 		</tr>
 
 		<tr ng-repeat="x in list">
-			<td>{{ x.product_name }}</td>
+			<td>{{ x.name }}</td>
 			<td>{{ x.weight }}</td>
-			<td>{{ x.calories }}</td>
-			<td>{{ x.proteins }}</td>
-			<td>{{ x.fats }}</td>
-			<td>{{ x.carbohydrates }}</td>
+			<td>{{ x.calories | number: 1 }}</td>
+			<td>{{ x.proteins | number: 1 }}</td>
+			<td>{{ x.fats | number: 1 }}</td>
+			<td>{{ x.carbohydrates | number: 1 }}</td>
 		</tr>
 
 		<tr>
@@ -98,14 +98,14 @@ var app = angular.module('myApp', []);
 app.controller('myCtrl', function($scope, $http) {
 	$scope.products = [];
 
-	$scope.product_name = "";
+	$scope.name = "";
 	$scope.weight;
 	$scope.calories;
 	$scope.proteins;
 	$scope.fats;
 	$scope.carbohydrates;
 
-	$scope.list = [];
+	$scope.list = [];	// summary table list
 
 	$scope.summaryObj = {};
 
@@ -122,7 +122,7 @@ app.controller('myCtrl', function($scope, $http) {
 
 	$scope.saveProduct = function() {
 		var product = {
-			"product_name"	: $scope.product_name,
+			"name"	: $scope.name,
 			"calories"		: $scope.calories,
 			"proteins"		: $scope.proteins,
 			"fats"			: $scope.fats,
@@ -143,7 +143,7 @@ app.controller('myCtrl', function($scope, $http) {
 
 	$scope.updateProduct = function(event, obj) {
 
-		var name = obj.x.product_name
+		var name = obj.x.name
 		var column = event.target.attributes.getNamedItem("data-column").value;
 		var value = event.target.innerText;
 
@@ -168,33 +168,37 @@ app.controller('myCtrl', function($scope, $http) {
 	$scope.calculate = function(obj, event) {
 
 		var prod = obj.x;
+		prod.weight = event.target.value;
 
-		// calculate products that have weight
-		if (event.target.value) {
-			prod.weight = event.target.value;	
+		var containObj = isContain(prod, $scope.list);
+
+		if (prod.weight) {
+			//add product to array if list not contain it
+			if (!containObj.is) {
+				$scope.list.push( $scope.calculateProduct(prod) );
+			}
 		} else {
-			return;
-		}
-		
-
-		// first time add product to array
-		if ($scope.list.length === 0) {
-			$scope.list.push( $scope.calculateProduct(prod) );
-		}
-
-		var add = false;
-
-		// to add on not to add))))
-		for (obj of $scope.list) {
-			if (prod.product_name !== obj.product_name) {
-				add = true;
-			} else {
-				add = false;
+			// remove product from array if list contain it
+			if (containObj.is) {
+				$scope.list.splice(containObj.index, 1);
 			}
 		}
 
-		if (add) {
-			$scope.list.push( $scope.calculateProduct(prod) );
+		// check that array contains an element or not
+		function isContain(product, list) {
+
+			var obj = {
+				"is": false,
+				"index": 0
+			};
+
+			list.forEach(function (curVal, index) {
+				if (product.name === curVal.name) {
+					obj.is = true;
+					obj.index = index;
+				}
+			});
+			return obj;
 		}
 
 		$scope.calculateSummary($scope.list);
@@ -204,7 +208,7 @@ app.controller('myCtrl', function($scope, $http) {
 
 		var obj = {}
 
-		obj.product_name 	= prod.product_name;
+		obj.name 	= prod.name;
 		obj.weight 			= prod.weight;
 		obj.calories 		= prod.calories * prod.weight / 100;
 		obj.proteins 		= prod.proteins * prod.weight / 100;
@@ -215,6 +219,7 @@ app.controller('myCtrl', function($scope, $http) {
 		return obj;
 	}
 
+	// fill up summary table
 	$scope.calculateSummary = function(list) {
 
 		var obj = {
@@ -234,6 +239,11 @@ app.controller('myCtrl', function($scope, $http) {
 		}
 
 		$scope.summaryObj = obj;
+	}
+
+	// define to show or hide summary table
+	$scope.trig = function() {
+		return Boolean($scope.list.length);
 	}
 });
 </script>
