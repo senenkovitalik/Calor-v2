@@ -96,6 +96,8 @@
 			<td style="text-align:center">{{ summaryObj.totalCarbohydrates | number: 1 }}</td>
 		</tr>
 	</table>
+
+	<input id="clear-button" type="button" value="Clear" ng-show="trig()" ng-click="clearTable()">
 </div>
 
 <script>
@@ -254,9 +256,16 @@ app.controller('myCtrl', function($scope, $http) {
 		return Boolean($scope.list.length);
 	}
 
+	// sorting summary table
 	$scope.sortBy = function(order) {
 		$scope.order = order;
 		$scope.reverse = !$scope.reverse;
+	}
+
+	// clear summary table and products input fields
+	$scope.clearTable = function() {
+		$scope.list = [];
+		
 	}
 });
 </script>
