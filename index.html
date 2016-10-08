@@ -52,12 +52,30 @@
 	<span class="table-header header-top-offset" ng-show="trig()">Calculated values</span>
 	<table id="summary" ng-show="trig()">
 		<tr>
-			<th ng-click="chooseOrder('name')">Product name</th>
-			<th ng-click="chooseOrder('weight')">Weight</th>
-			<th ng-click="chooseOrder('calories')">Calories</th>
-			<th ng-click="chooseOrder('proteins')">Proteins</th>
-			<th ng-click="chooseOrder('fats')">Fats</th>
-			<th ng-click="chooseOrder('carbohydrates')">Carbohydrates</th>
+			<th ng-click="sortBy('name')">
+				Product name
+				<span class="sortorder" ng-show="order === 'name'" ng-class="{reverse: reverse}"></span>
+			</th>
+			<th ng-click="sortBy('weight')">
+				Weight
+				<span class="sortorder" ng-show="order === 'weight'" ng-class="{reverse: reverse}"></span>
+			</th>
+			<th ng-click="sortBy('calories')">
+				Calories
+				<span class="sortorder" ng-show="order === 'calories'" ng-class="{reverse: reverse}"></span>
+			</th>
+			<th ng-click="sortBy('proteins')">
+				Proteins
+				<span class="sortorder" ng-show="order === 'proteins'" ng-class="{reverse: reverse}"></span>
+			</th>
+			<th ng-click="sortBy('fats')">
+				Fats
+				<span class="sortorder" ng-show="order === 'fats'" ng-class="{reverse: reverse}"></span>
+			</th>
+			<th ng-click="sortBy('carbohydrates')">
+				Carbohydrates
+				<span class="sortorder" ng-show="order === 'carbohydrates'" ng-class="{reverse: reverse}"></span>
+			</th>
 		</tr>
 
 		<tr ng-repeat="x in list | orderBy:order:reverse">
@@ -236,8 +254,9 @@ app.controller('myCtrl', function($scope, $http) {
 		return Boolean($scope.list.length);
 	}
 
-	$scope.chooseOrder = function(order) {
+	$scope.sortBy = function(order) {
 		$scope.order = order;
+		$scope.reverse = !$scope.reverse;
 	}
 });
 </script>

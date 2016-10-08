@@ -43,3 +43,10 @@ td[contenteditable="true"]:focus {
 .header-top-offset {
 	margin-top: 50px;
 }
+
+.sortorder:after {
+    content: '\25b2';   /*BLACK UP-POINTING TRIANGLE*/
+}
+.sortorder.reverse:after {
+    content: '\25bc';   /*BLACK DOWN-POINTING TRIANGLE*/
+}
