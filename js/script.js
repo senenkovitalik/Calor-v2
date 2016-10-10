@@ -17,9 +17,16 @@ app.controller('myCtrl', function($scope, $http) {
 	$scope.reverse = false;
 
 	$scope.loadProducts = function() {
+
+		var jsonObj = {
+			"action": "load"
+		}
+
+		var json = JSON.stringify(jsonObj);
+
 		$http({
 			method: 'GET',
-			url: 	'serverside.php',
+			url: 	'serverside.php?q=' + json,
 		}).then(function mySucces(response) {
 			$scope.products = response.data.products;
 		}, function myError(response) {
@@ -28,7 +35,8 @@ app.controller('myCtrl', function($scope, $http) {
 	}
 
 	$scope.saveProduct = function() {
-		var product = {
+		var jsonObj = {
+			"action"		: "save",
 			"name"			: $scope.name,
 			"calories"		: $scope.calories,
 			"proteins"		: $scope.proteins,
@@ -36,13 +44,13 @@ app.controller('myCtrl', function($scope, $http) {
 			"carbohydrates"	: $scope.carbohydrates
 		}
 
-		var jsonProduct = JSON.stringify(product);
+		var json = JSON.stringify(jsonObj);
 
 		$http({
 			method: 'GET',
-			url: 	'saveproduct.php?q=' + jsonProduct
+			url: 	'serverside.php?q=' + json
 		}).then(function mySucces(response) {
-			response.data ?	$scope.products.push(product) : null
+			response.data ?	$scope.products.push(jsonObj) : null
 		}, function myError(response) {
 			console.log(response.data);
 		});
@@ -54,17 +62,18 @@ app.controller('myCtrl', function($scope, $http) {
 		var column = event.target.attributes.getNamedItem("data-column").value;
 		var value = event.target.innerText;
 
-		var product = {
+		var jsonObj = {
+			"action" : "update",
 			"name" 	 : name,
 			"column" : column,
 			"value"  : value
 		}
 
-		var jsonProduct = JSON.stringify(product);
+		var json = JSON.stringify(jsonObj);
 
 		$http({
 			method: 'GET',
-			url: 	'updateproduct.php?q=' + jsonProduct
+			url: 	'serverside.php?q=' + json
 		}).then(function mySucces(response) {
 			console.log(response.data);
 		}, function myError(response) {
