@@ -39,7 +39,7 @@
 			<th>Fats</th>
 			<th>Carbohydrates</th>
 		</tr>
-		<tr ng-repeat="x in products">
+		<tr ng-repeat="x in products | orderBy:'name'">
 			<td data-column="name" 										contenteditable ng-blur="updateProduct($event, this)">{{ x.name }}</td>
 			<td style="text-align:center"><input type="number" ng-blur="calculate(this, $event)"></td>
 			<td style="text-align:center" data-column="calories" 		contenteditable ng-blur="updateProduct($event, this)">{{ x.calories }}</td>
