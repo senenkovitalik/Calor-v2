@@ -14,6 +14,9 @@ switch ($data["action"]) {
 	case "update":
 		updateProduct($data);
 		break;
+	case "delete":
+		deleteProduct($data);
+		break;
 }
 
 $conn->close();
@@ -79,6 +82,24 @@ function updateProduct($product) {
 		error_log("Error: " . $sql);
 		error_log($conn->error);
 		echo "Error";
+	}
+}
+
+function deleteProduct($product) {
+
+	$name = $product["name"];
+
+	global $conn;
+
+	$sql = "DELETE FROM products WHERE name='$name'";
+
+	if ($conn->query($sql) === TRUE) {
+		error_log("Product $name was delete successfuly");
+		echo TRUE;
+	} else {
+		error_log("Error: " . $sql);
+		error_log($conn->error);
+		echo FALSE;
 	}
 }
 ?>

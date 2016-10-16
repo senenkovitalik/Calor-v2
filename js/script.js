@@ -176,4 +176,28 @@ app.controller('myCtrl', function($scope, $http) {
 			(input.value !== "") ? input.value = "" : null
 		}
 	}
+
+	$scope.removeProduct = function(name) {
+
+		var jsonObj = {
+			"action": "delete",
+			"name" 	: name
+		}
+
+		var json = JSON.stringify(jsonObj);
+
+		$http({
+			method: 'GET',
+			url: 	'serverside.php?q=' + json
+		}).then(function mySucces(response) {
+			var i = 0;
+			$scope.products.forEach(function (curVal, index) {
+				if (curVal.name === name) {
+					$scope.products.splice(index, 1);
+				}
+			});
+		}, function myError(response) {
+			console.log(response.data);
+		});
+	}
 });
